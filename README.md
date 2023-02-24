@@ -15,21 +15,31 @@ Requisitos:
 
 O programa está dividido em dois arquivos:
 
-- Script.py  ==> é reservado para funções independentes, que terão como objetivo ler dados, tratar códigos de salvamento e definir variáveis que serão utilizadas posteriormente, parte majoritariamente Back-End do projeto e reutilizável caso o aplicativo migre para uma página desenvolvida em Django por exemplo
-- App.py     ==> Na prática, o executável do aplicativo, arquivo reservado para a criação e funcionalidades da interface desenvolvida com a biblioteca Python 'PySimpleGUI'. Suas funções são especialmente direcionadas para a interface do app que tem como objetivo a praticidade e facilidade de uso, abandonando critérios de Design ou boa aparência.
+# Script.py  ==> é reservado para funções independentes, que terão como objetivo ler dados, tratar códigos de salvamento e definir variáveis que serão utilizadas posteriormente, parte majoritariamente Back-End do projeto e reutilizável caso o aplicativo migre para uma página desenvolvida em Django por exemplo
+# App.py     ==> Na prática, o executável do aplicativo, arquivo reservado para a criação e funcionalidades da interface desenvolvida com a biblioteca Python 'PySimpleGUI'. Suas funções são especialmente direcionadas para a interface do app que tem como objetivo a praticidade e facilidade de uso, abandonando critérios de Design ou boa aparência.
 
-* ERROS a serem corrigidos:
+=> ERROS a serem corrigidos:
+
 - Problema: Trocar de tela após salvar o turno do dia atual avança para o próximo turno;
-- Solução: Utilizar uma API de calendário designar cada turno a um dia, limitando o avanço de turnos;
-status de progresso: EM ANDAMENTO
+- Solução: Utilizar uma API de data designar cada turno a um dia, limitando o avanço de turnos;
+ --- status de progresso: RESOLVIDO ---
 
-* PROPOSTAS a serem implementadas(Requisitos Não-Funcionais):
+
+=> PROPOSTAS a serem implementadas(Requisitos Não-Funcionais):
+
 - Dificuldade: Deve-se estudar todas matérias do turno obrigatoriamente;
 - Proposta: Retirar as checkboxes de conclusão e possibilitar a negligência de algumas matérias(MAS NUNCA DE TODAS);
-status de progressão: EM AGUARDO
+ --- status de progressão: EM AGUARDO ---
+
 
 - Dificuldade: Tela de criação de cronogramas pouco intuitiva;
 - Proposta: Eliminação de botões desnecessários, talvez reorganização de layout de tela;
-status de progressão: EM AGUARDO
+--- status de progressão: EM AGUARDO ---
 
-Proposta de projeto pessoal: Migração do app para página web Django
+
+- Dificuldade: Organização automática do ciclos ao longo da semana;
+- Proposta: Permitir ppr exemplo, a escolha de um dia da semana para estudar uma matéria fixa exclusiva toda semana(exemplo: toda Quarta-feira estudar apenas Redação);
+ --- status de progressão: EM AGUARDO ---
+
+Proposta de projeto pessoal:    Migração do app para página web Django;
+                                Revisão de Estrutura de código e Funções mal otimizadas;

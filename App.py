@@ -13,21 +13,21 @@ arquivo_cont = 'saves/contentsave.txt'
 # variáveis globais
 MAX_MATERIAS = 4
 save = spt.get_save()                                       # arquivo turno atual
+dia = spt.dia
 if save != '':
     turno = int(save[:3].rstrip("&"))                           # turno atual
-    dia_semana, ciclo = spt.get_dia()[0], spt.get_dia()[1]      # info do dia atual
+    dia_semana, ciclo = spt.get_dia_semana()[0], spt.get_dia_semana()[1]      # info do dia atual
 
 
 
 # ==================== FUNÇÕES AUXILIARES ==================== #
 # QUEBRA DE LINHA PARA TABELAS
-def quebra_linhas(str, larg):
+def quebra_linhas_str(str, larg):
     if len(str) < larg:
         return str
     list_str = str.split(' ')
     str = '$' + list_str[0]
-    for i in range(len(list_str) - 1):
-        i += 1
+    for i in range(1, len(list_str)):
         br = str.find('$')
         if len(str[br:])+len(list_str[i]) > larg:
             str = str.replace('$', '\n')
@@ -43,7 +43,7 @@ def set_vars():
     save = spt.get_save()
     spt.save = save
     turno = int(save[:3].rstrip("&"))
-    dia_semana, ciclo = spt.get_dia()[0], spt.get_dia()[1]
+    dia_semana, ciclo = spt.get_dia_semana()[0], spt.get_dia_semana()[1]
 
 
 
@@ -95,7 +95,7 @@ def set_table(layout):
             val_tab = [[str(turnos_rev[ind_turno])]]
             for bloco in cont_rev[ind_turno]:
                 headings_tabela.append(bloco[0])
-                val_tab[0].append(quebra_linhas(bloco[1], int(larg_col-4)))
+                val_tab[0].append(quebra_linhas_str(bloco[1], int(larg_col-4)))
             tabelas.append([sg.Table(values=val_tab, headings=headings_tabela, key='-table'+str(turno+1)+'-', justification='center', num_rows=1, row_height=70, col_widths=larg_col, hide_vertical_scroll=True, background_color=cor_sec)])
         layout.insert(6, [sg.Push(), sg.Column(tabelas, scrollable=True, vertical_scroll_only=True, expand_y=True), sg.Push()])
 
@@ -134,7 +134,7 @@ def get_inputs_cont(valores):
 
 def salvar(valores):
     conteudo = get_inputs_cont(valores)
-    spt.salvar_turno(turno, conteudo)
+    spt.salvar_turno(turno, dia, conteudo)
 
 
 
@@ -158,7 +158,7 @@ def get_buttons():
 
 # ==================== TELA CONFIGURAR - FUNÇÕES ==================== #
 def salvar_config(lista_config):
-    str = '1&&'
+    str = '1&&00'
     for i in range(5):
         ciclo = lista_config[i]
         for c in ciclo:
@@ -172,27 +172,38 @@ def salvar_config(lista_config):
     with open(arquivo_cont, 'w', encoding='utf-8') as cont_save:
         cont_save.write('')
         cont_save.close()
+    set_vars()
 
 
 
 # ==================== MENU PRINCIPAL ==================== #
 def menu_principal():
-    set_vars()
     sg.theme(tema_app)
-    layout = [
-        [sg.Text('Turno: '+str(turno), expand_x=True, justification='right', font=sub_title_font), sg.Push(), sg.Text('Cronograma', expand_x=True, justification='center', font='helvetica 24 bold', background_color=cor_pri, text_color='White'), sg.Push(), sg.Text(str(dia_semana+'-feira'), expand_x=True, justification='left', font=sub_title_font)],
-        [sg.Text('', size=(6,2))],
-        [sg.Text('Matérias de hoje:', expand_x=True, justification='center', font=sub_title_font)],
-        [], # checkboxes ~layout[3]
-        [sg.Text('', size=(1, 1))], # pular linha
-        [sg.Text('Anote aqui o conteúdo estudado para uma revisão futura', font=sub_title_font, justification='center', expand_x=True)],
-        [], # inputs ~layout[-3]
-        [sg.Text('', size=(1, 1))], # pular linha
-        [sg.Button('Voltar', key='-voltar-', border_width=4), sg.Button('Alterar Cronograma', key='-alterar-', border_width=4), sg.Text('', expand_x=True), sg.Button('Salvar', key='-salvar-', border_width=4), sg.Button('Salvar e Sair', key='-salvarsair-', border_width=4)]
-    ]
-    set_ckboxes(layout)
-    set_inputs(layout)
-    set_table(layout)
+    save = spt.get_save()
+    if int(save[3:5]) != int(dia):
+        set_vars()
+        layout = [
+            [sg.Text('Turno: '+str(turno), expand_x=True, justification='right', font=sub_title_font), sg.Push(), sg.Text('Cronograma', expand_x=True, justification='center', font='helvetica 24 bold', background_color=cor_pri, text_color='White'), sg.Push(), sg.Text(str(dia_semana+'-feira'), expand_x=True, justification='left', font=sub_title_font)],
+            [sg.Text('', size=(6,2))],
+            [sg.Text('Matérias de hoje:', expand_x=True, justification='center', font=sub_title_font)],
+            [], # checkboxes ~layout[3]
+            [sg.Text('', size=(1, 1))], # pular linha
+            [sg.Text('Anote aqui o conteúdo estudado para uma revisão futura', font=sub_title_font, justification='center', expand_x=True)],
+            [], # inputs ~layout[-3]
+            [sg.Text('', size=(1, 1))], # pular linha
+            [sg.Button('Voltar', key='-voltar-', border_width=4), sg.Button('Alterar Cronograma', key='-alterar-', border_width=4), sg.Text('', expand_x=True), sg.Button('Salvar', key='-salvar-', border_width=4), sg.Button('Salvar e Sair', key='-salvarsair-', border_width=4)]
+        ]
+        set_ckboxes(layout)
+        set_inputs(layout)
+        set_table(layout)
+    else:
+        turno = turno = int(save[:3].rstrip("&"))
+        dia_semana = spt.get_dia_semana(dia_atual=False)[0]
+        layout = [
+            [sg.Text('Turno: '+str(turno-1), expand_x=True, justification='right', font=sub_title_font), sg.Push(), sg.Text('Cronograma', expand_x=True, justification='center', font='helvetica 24 bold', background_color=cor_pri, text_color='White'), sg.Push(), sg.Text(str(dia_semana+'-feira'), expand_x=True, justification='left', font=sub_title_font)],
+            [sg.Text('Você já estudou o turno de hoje, parabéns!!!\nVá descansar um pouco e volte amanhã para mais estudos :)', font=title_font)],
+            [sg.Button('Voltar', key='-voltar-', border_width=4), sg.Push(), sg.Button('Alterar Cronograma', key='-alterar-', border_width=4)]
+            ]
     
     janela = sg.Window('App de Estudos by Gustavo', layout)
     
@@ -320,7 +331,7 @@ def menu_configurar():
                 if opcao == 'OK':
                     salvar_config(lista_configs)
                     btns = get_buttons()
-                    janela['-col_btns-'].update(layout=[btns])
+                    janela['-col_btns-'].update([btns])
         elif eventos == '-ver_plano-':
             salvar_config(lista_configs)
             janela.close()

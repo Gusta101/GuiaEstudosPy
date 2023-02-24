@@ -1,5 +1,7 @@
+import requests
+
 # FUNÇÕES AUXILIARES: 
-def gerar_cod_save(turno, lista_ciclos):
+def gerar_cod_save(turno, dia, lista_ciclos):
     c1 = str(turno+1)
     while len(c1) < 3:
         c1 += '&'
@@ -9,7 +11,7 @@ def gerar_cod_save(turno, lista_ciclos):
         c2 += '$'
         while c2.count('$') % MAX_MATERIAS != 0:
             c2 += '_$'
-    return c1 + c2
+    return c1 + dia + c2
 
 def gerar_cod_cont(turno, lista_cont):
     cod_cont = str(turno)
@@ -56,10 +58,10 @@ class Dia:
         self.ciclo = 0
 
 # ==================== FUNÇÃO SALVAR ==================== #
-def salvar_turno(turno, conteudo=''):
+def salvar_turno(turno, dia, conteudo=''):
     lista_ciclos = get_ciclos()
     with open(arquivo_save, 'w', encoding='utf-8') as f1:
-        f1.write(gerar_cod_save(turno, lista_ciclos))
+        f1.write(gerar_cod_save(turno, dia, lista_ciclos))
     f1.close()
     if conteudo != '':
         with open(arquivo_cont, 'a', encoding='utf-8') as f2:
@@ -101,7 +103,8 @@ def get_cont_rev(turnos_rev):     # devolve os conteúdos de revisão
 # ==================== DEFINIÇÃO DE VARIÁVEIS ==================== #
 def get_ciclos():    # devolve a lista de ciclos do cronograma atual
     lista_ciclos = []
-    lista_mat_save = save[3:].split('$')
+    lista_mat_save = save[5:].split('$')
+    n_ciclos = int(save.count('$') / MAX_MATERIAS)
     for i in range(n_ciclos):
         temp_ciclo = lista_mat_save[i*MAX_MATERIAS:4+i*MAX_MATERIAS]
         while '_' in temp_ciclo:
@@ -123,9 +126,14 @@ def get_semana():    # devolve o tipo da semana atual
         tipo_semana = 4
     return tipo_semana
 
-def get_dia():       # devolve o dia da semana e seu respectivo ciclo em uma lista
+def get_dia_semana(dia_atual=True):       # devolve o dia da semana e seu respectivo ciclo em uma lista
     turno = int(save[:3].rstrip('&'))
+    n_ciclos = int(save.count('$') / MAX_MATERIAS)
+    tipo_semana = get_semana()
+    semana = Semana(tipo_semana, n_ciclos)
     d = turno % 5
+    if not dia_atual:
+        d -= 1
     if d == 1:
         dia_semana = 'Segunda'
         ciclo_atual = semana.dia1.ciclo
@@ -143,6 +151,13 @@ def get_dia():       # devolve o dia da semana e seu respectivo ciclo em uma lis
         ciclo_atual = semana.dia5.ciclo
     return [dia_semana, ciclo_atual]
 
+def get_dia():
+    url = 'http://worldtimeapi.org/api/timezone/America/Sao_Paulo'
+    resposta = requests.get(url)
+    resposta = resposta.json()['datetime']
+    dia = resposta[8:10]
+    return dia
+
 def get_save():   # devolve a leitura do aquivo de salvamento
     with open(arquivo_save, 'r', encoding='utf=8') as f:
         save = f.read()
@@ -155,9 +170,4 @@ MAX_MATERIAS = 4
 arquivo_save = 'saves/mainsave.txt'
 arquivo_cont = 'saves/contentsave.txt'
 save = get_save()
-
-if save != '':
-    n_ciclos = int(save.count('$') / MAX_MATERIAS)
-    turno = int(save[0:3].rstrip("&"))
-    tipo_semana = get_semana()
-    semana = Semana(tipo_semana, n_ciclos)
+dia = get_dia()
