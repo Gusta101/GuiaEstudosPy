@@ -1,84 +1,55 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- CSS bootstrap import -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.css') }}">
-    <!-- JavaScript bootstrap import -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
-    <title>Guia de Estudos</title>
-</head>
-<body>
-    <div class="container">
-        <h1 class="my-3 text-center">Guia de estudos</h1>
+{% extends 'template.html' %}
+{% block conteudo %}
+<!-- CORPO DO APP -->
+<div class="container mx-3">
+    <h4>Turno: {{ turno }}</h4>
 
-        <div class="border border-secondary my-3"></div>
-
-        <!-- CORPO DO APP -->
-        <div class="container mx-3">
-            <!-- MATÉRIAS DE ESTUDO -->
-            <h3 class="text-center">Matérias de hoje</h3>
-            <div class="row text-center">
-                <div class="col">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="card-text">Matemática</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="card-text">História</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="card-text">Geografia</div>
-                        </div>
-                    </div>
+    <!-- MATÉRIAS DE ESTUDO -->
+    {% if materias %}
+    <h3 class="text-center">Matérias de hoje</h3>
+    <div class="row text-center">
+    {% for materia in materias %}
+        <div class="col-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-text">{{ materia }}</div>
                 </div>
             </div>
-            <p class="text-center text-secondary">Não há matérias para estudar hoje</p>
         </div>
-
-        <div class="border border-secondary my-3"></div>
-
-        <div class="container mx-3">
-            <!-- MATÉRIAS DE REVISÃO -->
-            <h3 class="text-center">Matérias de revisão</h3>
-            <div class="row text-center">
-                <div class="col">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5>Matemática</h5>
-                            <p>Conteúdo de matemática</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5>História</h5>
-                            <p>Conteúdo de história</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5>Geografia</h5>
-                            <p>Conteúdo de geografia</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <p class="text-center text-secondary">Não há matérias para revisar hoje</p>
-        </div>
+    {% endfor %}
     </div>
-</body>
-</html>
+    {% else %}
+    <p class="text-center text-secondary">Não há matérias para estudar hoje</p>
+    {% endif %}
+</div>
+
+<div class="border border-secondary my-3"></div>
+
+<div class="container mx-3">
+    <!-- MATÉRIAS DE REVISÃO -->
+    {% if conteudo_revisao %}
+    <h3 class="text-center">Matérias de revisão</h3>
+    <div class="row">
+        {% for conteudo_revisao in conteudo_revisao %}
+        <h6 class="">Turno: {{ conteudo_revisao[0] }}</h6>
+        {% if conteudo_revisao[1] %}
+        {% for materia, conteudo in conteudo_revisao[1].items() %}
+        <div class="col-4 text-center">
+            <div class="card">
+                <div class="card-body">
+                    <h5>{{ materia }}</h5>
+                    <p>{{ conteudo }}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <p class="text-center text-secondary">Não há matérias para revisar</p>
+        {% endif %}
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="text-center text-secondary">Não há matérias para revisar hoje</p>
+    {% endif %}
+</div>
+{% endblock %}

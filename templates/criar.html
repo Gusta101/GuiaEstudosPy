@@ -1,0 +1,70 @@
+{% extends 'template.html' %}
+{% block conteudo %}
+
+<form action="#" method="post">
+    <div class="form-group">
+        <label for="input-materia" class="form-label h6">Insira a matéria a ser adicionada ou edite uma já
+            listada</label>
+        <div class="input-group">
+            <button class="btn btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown"
+                type="button"></button>
+            <ul class="dropdown-menu">
+                <li><a type="button" class="dropdown-item">Matéria 1: Mat</a></li>
+                <li><a type="button" class="dropdown-item">Matéria 2: Hist</a></li>
+                <li><a type="button" class="dropdown-item">Matéria 3: Geo</a></li>
+            </ul>
+
+            <input class="form-control" type="text" name="input-materia" id="input-materia"
+                placeholder="Nome da Matéria" maxlength="45">
+
+            <button type="button" class="btn btn-danger">Remover</button>
+            <button type="button" class="btn btn-success">Adicionar</button>
+        </div>
+    </div>
+</form>
+
+<div class="mt-3">
+    <h6>Divisão dos ciclos:</h6>
+    <div class="row">
+        <table class="table text-center table-secondary table-bordered table-striped col">
+            <thead>
+                <th class="table-active h4" scope="col">Ciclo 1</th>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Matemática<button type="button" class="btn ms-1">X</button></td>
+                </tr>
+                <tr>
+                    <td>Geografia<button type="button" class="btn ms-1">X</button></td>
+                </tr>
+                <tr>
+                    <td><button type="button" class="btn btn-outline-primary">Adicionar +</button></td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table text-center table-secondary table-bordered table-striped col">
+            <thead>
+                <th class="table-active h4" scope="col">Ciclo 2</th>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>História<button type="button" class="btn ms-1">X</button></td>
+                </tr>
+                <tr>
+                    <td>Literatura<button type="button" class="btn ms-1">X</button></td>
+                </tr>
+                <tr>
+                    <td><button type="button" class="btn btn-outline-primary">Adicionar +</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="d-flex justify-content-center mt-3">
+    <button type="button" class="btn btn-outline-primary me-3">Divisão automática</button>
+    <button type="submit" class="btn btn-primary w-25">Salvar Plano</button>
+</div>
+<p class="text-secondary text-center">* Lembrando: Há um limite de 5 ciclos diferentes com 5 matérias em cada</p>
+
+<script src="{{ url_for('static', filename='criar.js') }}"></script>
+{% endblock %}
