@@ -1,5 +1,7 @@
 # GuiaEstudosPy
 
+>Status do projeto: Stand By/Derrubado
+
 Reimplementação do projeto inicial.
 
 Agora utilizando técnicas mais sofisticadas, através do uso do framework de desenvolvimento web Flask, e utilização de API local .json (evitando utilização de banco de dados SQL devido à baixa potência da minha máquina atual), esse projeto visa auxiliar o usuário nos estudos para quaisquer concursos, provas, ou carreiras que lhe convirem.
